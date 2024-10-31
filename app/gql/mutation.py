@@ -59,13 +59,14 @@ class CreateTarget(Mutation):
 
 class UpdateResultMission(Mutation):
     class Arguments:
+        mission_id = Int()
         mission_input = ResultMissionInput()
 
     mission = Field(MissionType)
 
     @staticmethod
-    def mutate(root, info, mission_input):
-        return UpdateResultMission(mission=Query.check_response(update_mission(mission_input)))
+    def mutate(root, info, mission_input,mission_id):
+        return UpdateResultMission(mission=Query.check_response(update_mission(mission_input,mission_id)))
 
 
 class DeleteMission(Mutation):

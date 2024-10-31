@@ -33,5 +33,5 @@ class Query(ObjectType):
     def resolve_mission_by_target_industry(root,info,target_industry):
         return get_mission_by_target_industry(target_industry)
     @staticmethod
-    def result_attack_by_target_type_name(root,info,target_type_name):
+    def resolve_attack_by_target_type_name(root,info,target_type_name):
         return get_result_attack_by_target_type_name(target_type_name)

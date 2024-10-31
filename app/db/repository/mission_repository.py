@@ -3,7 +3,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.db.database import session_maker
-from app.db.models import Target
+from app.db.models import Target, TargetType
 from app.db.models.Mission import Mission
 
 
@@ -20,25 +20,19 @@ def insert_mission(mission: Mission):
         return Failure(str(e))
 
 
-def update_mission(mission: Mission):
-    with session_maker() as session:
-        try:
-            mission = get_mission_by_id(mission.mission_id)
-            if mission is None:
-                return Failure(f"customer by id {id} not found")
-            mission_to_update = session.merge(mission)
-            mission_to_update.airborne_aircraft = mission.airborne_aircraft
-            mission_to_update.aircraft_returned = mission.aircraft_returned
-            mission_to_update.attacking_aircraft = mission.attacking_aircraft
-            mission_to_update.aircraft_failed = mission.aircraft_failed
-            mission_to_update.aircraft_lost = mission.aircraft_lost
+def update_mission_by_id(mission_id, attack_result_data):
+    try:
+        with session_maker() as session:
+            attack_result = session.query(Mission).filter_by(mission_id=mission_id).first()
+            if not attack_result:
+                raise Failure("Mission result not found")
+            for key, value in attack_result_data.items():
+                setattr(attack_result, key, value)
             session.commit()
-            session.refresh(mission_to_update)
-            return Success(mission_to_update)
-        except SQLAlchemyError as e:
-            session.rollback()
-            Failure(str(e))
-
+            session.refresh(attack_result)
+            return attack_result
+    except SQLAlchemyError as e:
+        return Failure(str(e))
 def delete_mission(mission_id:int) -> Result[str,str]:
     mission = get_mission_by_id(mission_id)
     if not mission:
@@ -75,5 +69,6 @@ def get_air_crafts_by_mission(mission_id: int):
 
 
 def get_result_attack_by_target_type_name(target_type_name):
+    breakpoint()
     with session_maker() as session:
         return session.query(Mission).join(Mission.target).join(Target.target_type).filter(TargetType.target_type_name == target_type_name).all()
