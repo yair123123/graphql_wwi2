@@ -3,7 +3,7 @@ from returns.result import Success
 from sqlalchemy import false
 
 from app.db.models import Mission, Target
-from app.db.repository.mission_repository import insert_mission, update_mission, delete_mission
+from app.db.repository.mission_repository import insert_mission, delete_mission
 from app.db.repository.target_repository import insert_target
 from app.gql.query import Query
 from app.gql.types.MissionType import MissionType

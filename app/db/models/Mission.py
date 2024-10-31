@@ -17,5 +17,5 @@ class Mission(Base):
     aircraft_lost = Column(Float,nullable=True)
 
 
-    target = relationship("Target",back_populates="mission",lazy="joined")
+    targets = relationship("Target",back_populates="mission",lazy="joined")
 

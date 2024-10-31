@@ -14,3 +14,4 @@ class City(Base):
     longitude = Column(DECIMAL, nullable=True)
 
     country = relationship("Country", back_populates="cities",lazy="joined")
+    targets = relationship("Target",back_populates="city",lazy="joined")

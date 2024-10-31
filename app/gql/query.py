@@ -5,6 +5,8 @@ from returns.result import Result, Success
 from app.db.repository.mission_repository import get_mission_by_id, get_missions_by_range_date, get_missions_by_country, \
     get_mission_by_target_industry, get_result_attack_by_target_type_name
 from app.gql.types.MissionType import MissionType
+from app.gql.types.stats_mission import StateMissionType
+from app.stats.stat_service import stat_mission_by_city
 
 
 class Query(ObjectType):
@@ -20,6 +22,7 @@ class Query(ObjectType):
     missions_by_country = List(MissionType,country_name=String())
     mission_by_target_industry=List(MissionType,target_industry=String())
     attack_by_target_type_name=List(MissionType,target_type_name=String())
+    stats_mission_by_city = Field(StateMissionType,city_name = String())
     @staticmethod
     def resolve_mission_by_id(root,info,mission_id):
         return get_mission_by_id(mission_id)
@@ -35,3 +38,6 @@ class Query(ObjectType):
     @staticmethod
     def resolve_attack_by_target_type_name(root,info,target_type_name):
         return get_result_attack_by_target_type_name(target_type_name)
+    @staticmethod
+    def resolve_stats_mission_by_city(root,info,city_name):
+        return stat_mission_by_city(city_name)
